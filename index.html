@@ -1,531 +1,356 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TRÁI CÂY DQ</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRÁI CÂY DQ</title>
+<meta name="monetag" content="22dfe706aa333a89efeac084a162ee77">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+  min-height: 100vh;
+}
+.header {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  color: white; padding: 20px 0; text-align: center;
+  box-shadow: 0 4px 20px rgba(13,110,253,0.3);
+  position: sticky; top: 0; z-index: 1000;
+}
+.header h1 { font-size: 2.5rem; letter-spacing: 3px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.header p { font-size: 1rem; opacity: 0.9; margin-top: 5px; }
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+.mode-toggle { text-align: center; margin-top: 20px; }
+.mode-toggle button {
+  background: none; border: 2px solid rgba(255,255,255,0.5); color: white;
+  padding: 8px 20px; border-radius: 25px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s;
+}
+.mode-toggle button:hover { background: rgba(255,255,255,0.2); border-color: white; }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
-            min-height: 100vh;
-        }
+/* ===== ADMIN ===== */
+.update-section {
+  background: white; border-radius: 16px; padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 30px;
+  border: 1px solid rgba(13,110,253,0.1);
+}
+.update-section h2 { color: #0d6efd; margin-bottom: 20px; font-size: 1.5rem; }
+.form-row {
+  display: flex; gap: 12px; margin-bottom: 12px;
+  align-items: center; flex-wrap: wrap; padding: 10px 12px;
+  border-radius: 10px; transition: all 0.3s;
+}
+.form-row.off { background: #f8f9fa; opacity: 0.7; }
+.form-row.off label { color: #999; }
+.form-row label { min-width: 170px; font-weight: 600; color: #333; font-size: 0.9rem; }
+.form-row input[type="number"] {
+  flex: 1; min-width: 100px; padding: 10px 14px;
+  border: 2px solid #e0e7ef; border-radius: 8px; font-size: 0.95rem;
+  transition: all 0.3s; outline: none;
+}
+.form-row input[type="number"]:focus { border-color: #0d6efd; box-shadow: 0 0 0 4px rgba(13,110,253,0.15); }
+.form-row .old-price { color: #dc3545; font-size: 0.8rem; text-decoration: line-through; min-width: 70px; }
+.form-row .toggle-btn {
+  width: 44px; height: 24px; border-radius: 12px; border: none;
+  cursor: pointer; position: relative; transition: all 0.3s; flex-shrink: 0;
+}
+.form-row .toggle-btn.on { background: #198754; }
+.form-row .toggle-btn.off { background: #dc3545; }
+.form-row .toggle-btn::after {
+  content: ''; position: absolute; top: 2px; width: 20px; height: 20px;
+  border-radius: 50%; background: white; transition: all 0.3s;
+}
+.form-row .toggle-btn.on::after { right: 2px; }
+.form-row .toggle-btn.off::after { left: 2px; }
+.form-row .note-input {
+  flex: 0 0 120px; min-width: 80px; padding: 8px 10px;
+  border: 2px solid #e0e7ef; border-radius: 8px; font-size: 0.85rem; outline: none;
+}
+.form-row .note-input:focus { border-color: #0d6efd; }
 
-        /* ===== HEADER ===== */
-        .header {
-            background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
-            color: white;
-            padding: 20px 0;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(13, 110, 253, 0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+/* ===== BUTTONS ===== */
+.btn-save-all {
+  background: linear-gradient(135deg, #198754, #157347); color: white;
+  border: none; padding: 12px 30px; border-radius: 10px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  display: block; margin: 20px auto 0; min-width: 200px;
+}
+.btn-save-all:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(25,135,84,0.4); }
+.btn-update {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7); color: white;
+  border: none; padding: 12px 30px; border-radius: 10px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  display: block; margin: 10px auto 0; min-width: 200px;
+}
+.btn-update:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13,110,253,0.4); }
 
-        .header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 3px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
+/* ===== PRODUCTS ===== */
+.products-section {
+  background: white; border-radius: 16px; padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid rgba(13,110,253,0.1);
+  margin-bottom: 20px;
+}
+.products-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+}
+.products-section h2 { color: #0d6efd; font-size: 1.5rem; }
+.products-section .sub-title { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+.last-update { color: #888; font-size: 0.85rem; font-style: italic; }
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 20px; }
+.product-card {
+  background: white; border: 2px solid #e8f0fe; border-radius: 14px;
+  padding: 20px; transition: all 0.3s; position: relative;
+}
+.product-card:hover { border-color: #0d6efd; box-shadow: 0 8px 25px rgba(13,110,253,0.1); transform: translateY(-3px); }
+.product-card.sold-out { background: #f8f9fa; border-color: #e9ecef; opacity: 0.75; }
+.product-card.sold-out:hover { transform: none; box-shadow: none; }
+.product-name { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.product-weight { color: #888; font-size: 0.85rem; margin-bottom: 8px; }
+.price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.product-price { font-size: 1.6rem; font-weight: 800; color: #0d6efd; }
+.product-price .currency { font-size: 0.9rem; font-weight: 600; color: #0b5ed7; }
+.old-price-display { font-size: 1rem; color: #dc3545; text-decoration: line-through; }
+.product-status {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600; margin-top: 8px;
+}
+.product-status.in-stock { background: #d1e7ff; color: #0d6efd; }
+.product-status.out-of-stock { background: #f0f0f0; color: #999; }
+.product-note { font-size: 0.8rem; color: #856404; background: #fff3cd; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 6px; }
 
-        .header p {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-top: 5px;
-        }
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 30px; right: 30px;
+  background: #198754; color: white; padding: 16px 28px;
+  border-radius: 12px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  transform: translateY(100px); opacity: 0; transition: all 0.5s; z-index: 9999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
 
-        /* ===== CONTAINER ===== */
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        /* ===== PHẦN CẬP NHẬT GIÁ ===== */
-        .update-section {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-            border: 1px solid rgba(13, 110, 253, 0.1);
-        }
-
-        .update-section h2 {
-            color: #0d6efd;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .update-section h2::before {
-            content: "✏️";
-            font-size: 1.3rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .form-row label {
-            min-width: 180px;
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95rem;
-        }
-
-        .form-row input {
-            flex: 1;
-            min-width: 150px;
-            padding: 12px 16px;
-            border: 2px solid #e0e7ef;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
-            outline: none;
-        }
-
-        .form-row input:focus {
-            border-color: #0d6efd;
-            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
-        }
-
-        .btn-update {
-            background: linear-gradient(135deg, #0d6efd, #0b5ed7);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            margin: 20px auto 0;
-            min-width: 200px;
-        }
-
-        .btn-update:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4);
-        }
-
-        .btn-update:active {
-            transform: translateY(0);
-        }
-
-        .btn-save-all {
-            background: linear-gradient(135deg, #198754, #157347);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: block;
-            margin: 10px auto 0;
-            min-width: 200px;
-        }
-
-        .btn-save-all:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(25, 135, 84, 0.4);
-        }
-
-        /* ===== DANH SÁCH SẢN PHẨM ===== */
-        .products-section {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            border: 1px solid rgba(13, 110, 253, 0.1);
-        }
-
-        .products-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .products-section h2 {
-            color: #0d6efd;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .products-section h2::before {
-            content: "🛒";
-            font-size: 1.3rem;
-        }
-
-        .last-update {
-            color: #888;
-            font-size: 0.85rem;
-            font-style: italic;
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 20px;
-        }
-
-        .product-card {
-            background: white;
-            border: 2px solid #e8f0fe;
-            border-radius: 14px;
-            padding: 20px;
-            transition: all 0.3s;
-            position: relative;
-        }
-
-        .product-card:hover {
-            border-color: #0d6efd;
-            box-shadow: 0 8px 25px rgba(13, 110, 253, 0.1);
-            transform: translateY(-3px);
-        }
-
-        .product-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-        }
-
-        .product-weight {
-            color: #888;
-            font-size: 0.85rem;
-            margin-bottom: 12px;
-        }
-
-        .product-price {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #0d6efd;
-        }
-
-        .product-price .currency {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #0b5ed7;
-        }
-
-        .product-status {
-            display: inline-block;
-            background: #d1e7ff;
-            color: #0d6efd;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .header h1 { font-size: 1.8rem; }
-            .container { padding: 0 15px; }
-            .form-row { flex-direction: column; align-items: stretch; }
-            .form-row label { min-width: unset; }
-            .products-grid { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 { font-size: 1.4rem; }
-            .update-section, .products-section { padding: 20px; }
-            .product-price { font-size: 1.3rem; }
-        }
-
-        /* ===== THÔNG BÁO ===== */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: #198754;
-            color: white;
-            padding: 16px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s;
-            z-index: 9999;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* ===== MODE TOGGLE ===== */
-        .mode-toggle {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .mode-toggle button {
-            background: none;
-            border: 2px solid rgba(255,255,255,0.5);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .mode-toggle button:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: white;
-        }
-
-        /* ===== ADMIN PASSWORD ===== */
-        .admin-lock {
-            background: white;
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
-            max-width: 400px;
-            margin: 80px auto;
-            text-align: center;
-        }
-
-        .admin-lock h2 {
-            color: #0d6efd;
-            margin-bottom: 20px;
-        }
-
-        .admin-lock input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e7ef;
-            border-radius: 10px;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            outline: none;
-        }
-
-        .admin-lock input:focus {
-            border-color: #0d6efd;
-        }
-
-        .admin-lock .btn {
-            background: #0d6efd;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
-            font-size: 1rem;
-            cursor: pointer;
-            width: 100%;
-        }
-
-        .admin-lock .hint {
-            color: #888;
-            font-size: 0.85rem;
-            margin-top: 15px;
-        }
-    </style>
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.8rem; }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row label { min-width: unset; }
+  .form-row .old-price { min-width: unset; }
+  .products-grid { grid-template-columns: 1fr; }
+}
+</style>
 </head>
 <body>
 
-    <!-- ===== HEADER ===== -->
-    <div class="header">
-        <h1>🍍 TRÁI CÂY DQ 🍍</h1>
-        <p>Trái cây tươi ngon - Giá tốt mỗi ngày</p>
-        <div class="mode-toggle">
-            <button onclick="toggleMode()">🔑 Quản lý giá</button>
-        </div>
+<!-- MonetaG script -->
+<script src="https://s13.tmng.org/c.js?n=22dfe706aa333a89efeac084a162ee77" async></script>
+
+<div class="header">
+  <h1>🍍 TRÁI CÂY DQ 🍍</h1>
+  <p>Trái cây tươi ngon - Giá tốt mỗi ngày</p>
+  <div class="mode-toggle">
+    <button onclick="toggleMode()">🔑 Quản lý giá</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== ADMIN PANEL ===== -->
+  <div id="adminSection" class="update-section" style="display:none;">
+    <h2>✏️ Cập nhật giá sản phẩm</h2>
+    <p style="color:#666;margin-bottom:20px;">
+      🔘 Bật/Tắt: sản phẩm <span class="old-price" style="text-decoration:none;color:#198754;">XANH</span> là đang bán, <span class="old-price" style="text-decoration:none;color:#dc3545;">ĐỎ</span> là hết hàng.<br>
+      📝 Giá cũ: nhập giá cũ (nếu có) để hiển thị giá cũ gạch ngang.<br>
+      📋 Ghi chú: nhập ghi chú ngắn như "Có sẵn", "Đặt trước 1 ngày",...
+    </p>
+    <div id="priceForm"></div>
+    <button class="btn-save-all" onclick="saveAllPrices()">💾 Lưu tất cả giá</button>
+    <button class="btn-update" onclick="toggleMode()">🔒 Đóng bảng giá</button>
+    <p style="text-align:center;color:#888;font-size:0.85rem;margin-top:10px;">Dữ liệu lưu trên trình duyệt</p>
+  </div>
+
+  <!-- ===== CÒN HÀNG ===== -->
+  <div class="products-section">
+    <div class="products-header">
+      <h2>🛒 Bảng giá hôm nay</h2>
+      <span class="last-update" id="lastUpdate">Chưa có cập nhật</span>
     </div>
+    <div class="sub-title">✅ Còn hàng</div>
+    <div class="products-grid" id="productGridInStock"></div>
+  </div>
 
-    <div class="container">
-
-        <!-- ===== CHỈ CÓ ADMIN MỚI THẤY PHẦN NÀY ===== -->
-        <div id="adminSection" class="update-section" style="display: none;">
-            <h2>Cập nhật giá sản phẩm</h2>
-            <p style="color: #666; margin-bottom: 20px;">Nhập giá mới và bấm "Lưu tất cả" để cập nhật cho khách hàng xem.</p>
-
-            <div id="priceForm"></div>
-
-            <button class="btn-save-all" onclick="saveAllPrices()">💾 Lưu tất cả giá</button>
-            <button class="btn-update" onclick="toggleMode()">🔒 Đóng bảng giá</button>
-            <p style="text-align: center; color: #888; font-size: 0.85rem; margin-top: 10px;">Dữ liệu được lưu trên trình duyệt của bạn</p>
-        </div>
-
-        <!-- ===== DANH SÁCH SẢN PHẨM ===== -->
-        <div class="products-section" id="productsSection">
-            <div class="products-header">
-                <h2>Bảng giá hôm nay</h2>
-                <span class="last-update" id="lastUpdate">Chưa có cập nhật</span>
-            </div>
-            <div class="products-grid" id="productGrid"></div>
-        </div>
-
+  <!-- ===== HẾT HÀNG ===== -->
+  <div class="products-section" id="soldOutSection" style="display:none;">
+    <div class="products-header">
+      <h2>📋 Hết hàng / Tạm ngưng</h2>
     </div>
+    <div class="products-grid" id="productGridSoldOut"></div>
+  </div>
 
-    <!-- ===== TOAST THÔNG BÁO ===== -->
-    <div class="toast" id="toast"></div>
+</div>
 
-    <script>
-        // ===== DANH SÁCH SẢN PHẨM =====
-        const PRODUCTS = [
-            { id: 'mangcut', name: 'Măng cụt', weight: '1kg' },
-            { id: 'xoai_dl', name: 'Xoài Đài Loan', weight: '1kg' },
-            { id: 'xoai_cocdeo', name: 'Xoài Cốc Đeo', weight: '1kg' },
-            { id: 'cucai', name: 'Củ cải', weight: '10kg' },
-            { id: 'quytuc', name: 'Quýt Úc', weight: '1kg' },
-            { id: 'tao', name: 'Táo', weight: '1kg' },
-            { id: 'le', name: 'Lê', weight: '1kg' },
-            { id: 'nhan', name: 'Nhãn', weight: '1kg' },
-            { id: 'chomchom', name: 'Chôm chôm', weight: '1kg' },
-            { id: 'dao', name: 'Đào', weight: '1kg' }
-        ];
+<div class="toast" id="toast"></div>
 
-        // ===== MẬT KHẨU ADMIN (đổi lại sau) =====
-        const ADMIN_PASSWORD = 'dq123';  // ← ĐỔI MẬT KHẨU NÀY!
+<script>
+// ===== DANH SÁCH SẢN PHẨM =====
+const PRODUCTS = [
+  { id: 'mangcut',      name: 'Măng cụt',           weight: '1kg' },
+  { id: 'xoai_dl',      name: 'Xoài Đài Loan',      weight: '1kg' },
+  { id: 'xoai_cocdeo',  name: 'Xoài Cốc Đeo',       weight: '1kg' },
+  { id: 'xoai_catchu',  name: 'Xoài Cát Chu',       weight: '1kg' },
+  { id: 'mangcau',      name: 'Mãng cầu',           weight: '1kg' },
+  { id: 'cucai',        name: 'Củ cải',             weight: '10kg' },
+  { id: 'quytuc',       name: 'Quýt Úc',            weight: '1kg' },
+  { id: 'tao',          name: 'Táo',                weight: '1kg' },
+  { id: 'le',           name: 'Lê',                 weight: '1kg' },
+  { id: 'nhan',         name: 'Nhãn',               weight: '1kg' },
+  { id: 'chomchom_thai', name: 'Chôm chôm Thái',    weight: '1kg' },
+  { id: 'chomchom_vl',  name: 'Chôm chôm Vĩnh Long', weight: '1kg' },
+  { id: 'dao',          name: 'Đào',                weight: '1kg' },
+  { id: 'nho',          name: 'Nho',                weight: '1kg' }
+];
 
-        let isAdmin = false;
+const ADMIN_PASSWORD = 'dq123';
+let isAdmin = false;
 
-        // ===== KHỞI TẠO =====
-        function init() {
-            renderProducts();
-            renderForm();
-            updateLastUpdate();
-        }
+// ===== INIT =====
+function init() {
+  renderProducts();
+  renderForm();
+  updateLastUpdate();
+}
 
-        // ===== HIỂN THỊ SẢN PHẨM CHO KHÁCH =====
-        function renderProducts() {
-            const grid = document.getElementById('productGrid');
-            let html = '';
+// ===== HIỂN THỊ SẢN PHẨM =====
+function renderProducts() {
+  const gridIn = document.getElementById('productGridInStock');
+  const gridOut = document.getElementById('productGridSoldOut');
+  let htmlIn = '';
+  let htmlOut = '';
+  let hasOut = false;
 
-            PRODUCTS.forEach(product => {
-                const price = localStorage.getItem('price_' + product.id) || '0';
-                const priceDisplay = price === '0' ? 'Liên hệ' : 
-                    parseInt(price).toLocaleString('vi-VN') + ' <span class="currency">₫</span>';
+  PRODUCTS.forEach(p => {
+    const active  = localStorage.getItem('active_' + p.id);
+    const isOn    = active === null ? true : active === 'true';
+    const price   = localStorage.getItem('price_' + p.id) || '0';
+    const oldPrice = localStorage.getItem('oldprice_' + p.id) || '';
+    const note    = localStorage.getItem('note_' + p.id) || '';
 
-                html += `
-                    <div class="product-card">
-                        <div class="product-name">🍑 ${product.name}</div>
-                        <div class="product-weight">📦 ${product.weight}</div>
-                        <div class="product-price">${priceDisplay}</div>
-                        <div class="product-status">${price === '0' ? '📞 Gọi để biết giá' : '✅ Còn hàng'}</div>
-                    </div>
-                `;
-            });
+    const priceDisplay = price === '0' ? 'Liên hệ' : parseInt(price).toLocaleString('vi-VN') + ' <span class="currency">₫</span>';
+    const oldDisplay = (oldPrice && parseInt(oldPrice) > 0) ? parseInt(oldPrice).toLocaleString('vi-VN') + '₫' : '';
+    const noteDisplay = note ? `<div class="product-note">📌 ${note}</div>` : '';
 
-            grid.innerHTML = html;
-        }
+    let card = `
+      <div class="product-card ${isOn ? '' : 'sold-out'}">
+        <div class="product-name">🍑 ${p.name}</div>
+        <div class="product-weight">📦 ${p.weight}</div>
+        <div class="price-row">
+          <div class="product-price">${priceDisplay}</div>
+          ${oldDisplay ? `<div class="old-price-display">${oldDisplay}</div>` : ''}
+        </div>
+        <div class="product-status ${isOn ? 'in-stock' : 'out-of-stock'}">${isOn ? '✅ Còn hàng' : '⛔ Hết hàng'}</div>
+        ${noteDisplay}
+      </div>`;
 
-        // ===== HIỂN THỊ FORM NHẬP GIÁ =====
-        function renderForm() {
-            const form = document.getElementById('priceForm');
-            let html = '';
+    if (isOn) {
+      htmlIn += card;
+    } else {
+      htmlOut += card;
+      hasOut = true;
+    }
+  });
 
-            PRODUCTS.forEach(product => {
-                const currentPrice = localStorage.getItem('price_' + product.id) || '';
-                html += `
-                    <div class="form-row">
-                        <label>🍑 ${product.name} (${product.weight})</label>
-                        <input type="number" id="input_${product.id}" 
-                               placeholder="Nhập giá (VNĐ)" 
-                               value="${currentPrice}"
-                               min="0">
-                        <span style="color:#888; font-size:0.85rem;">₫</span>
-                    </div>
-                `;
-            });
+  gridIn.innerHTML = htmlIn || '<p style="color:#888;">Chưa có sản phẩm nào đang bán.</p>';
+  gridOut.innerHTML = htmlOut;
+  document.getElementById('soldOutSection').style.display = hasOut ? 'block' : 'none';
+}
 
-            form.innerHTML = html;
-        }
+// ===== HIỂN THỊ FORM ADMIN =====
+function renderForm() {
+  const form = document.getElementById('priceForm');
+  let html = '';
+  PRODUCTS.forEach(p => {
+    const active    = localStorage.getItem('active_' + p.id);
+    const isOn      = active === null ? true : active === 'true';
+    const price     = localStorage.getItem('price_' + p.id) || '';
+    const oldPrice  = localStorage.getItem('oldprice_' + p.id) || '';
+    const note      = localStorage.getItem('note_' + p.id) || '';
 
-        // ===== LƯU TẤT CẢ GIÁ =====
-        function saveAllPrices() {
-            let count = 0;
-            PRODUCTS.forEach(product => {
-                const input = document.getElementById('input_' + product.id);
-                let price = input.value.trim();
-                
-                // Nếu để trống thì lưu là 0 (liên hệ)
-                if (price === '') price = '0';
-                
-                localStorage.setItem('price_' + product.id, price);
-                count++;
-            });
+    html += `
+      <div class="form-row ${isOn ? '' : 'off'}" id="row_${p.id}">
+        <button class="toggle-btn ${isOn ? 'on' : 'off'}" id="tog_${p.id}" onclick="toggleProduct('${p.id}')"></button>
+        <label>🍑 ${p.name} (${p.weight})</label>
+        <input type="number" id="input_${p.id}" placeholder="Giá mới" value="${price}" min="0">
+        <span style="color:#888;font-size:0.85rem;">₫</span>
+        <input type="number" id="oldinput_${p.id}" placeholder="Giá cũ" value="${oldPrice}" min="0" style="max-width:100px;">
+        <span style="color:#dc3545;font-size:0.75rem;">cũ</span>
+        <input type="text" id="note_${p.id}" placeholder="Ghi chú" value="${note}" class="note-input">
+      </div>`;
+  });
+  form.innerHTML = html;
+}
 
-            // Cập nhật thời gian
-            const now = new Date();
-            const timeStr = now.toLocaleString('vi-VN', {
-                hour: '2-digit', minute: '2-digit', 
-                day: '2-digit', month: '2-digit', year: 'numeric'
-            });
-            localStorage.setItem('lastUpdate', timeStr);
+// ===== BẬT/TẮT SẢN PHẨM =====
+function toggleProduct(id) {
+  const current = localStorage.getItem('active_' + id);
+  const isOn = current === null ? true : current === 'true';
+  localStorage.setItem('active_' + id, (!isOn).toString());
+  renderForm();
+}
 
-            // Render lại
-            renderProducts();
-            updateLastUpdate();
-            showToast('✅ Đã lưu giá ' + count + ' sản phẩm thành công!');
-        }
+// ===== LƯU TẤT CẢ =====
+function saveAllPrices() {
+  let count = 0;
+  PRODUCTS.forEach(p => {
+    const priceInput    = document.getElementById('input_' + p.id);
+    const oldInput      = document.getElementById('oldinput_' + p.id);
+    const noteInput     = document.getElementById('note_' + p.id);
 
-        // ===== CẬP NHẬT THỜI GIAN =====
-        function updateLastUpdate() {
-            const lastUpdate = localStorage.getItem('lastUpdate');
-            document.getElementById('lastUpdate').textContent = 
-                lastUpdate ? '🕐 Cập nhật lúc: ' + lastUpdate : 'Chưa có cập nhật';
-        }
+    let price = priceInput.value.trim();
+    if (price === '') price = '0';
+    localStorage.setItem('price_' + p.id, price);
+    localStorage.setItem('oldprice_' + p.id, oldInput.value.trim());
+    localStorage.setItem('note_' + p.id, noteInput.value.trim());
+    count++;
+  });
 
-        // ===== CHẾ ĐỘ ADMIN =====
-        function toggleMode() {
-            if (isAdmin) {
-                // Đóng admin
-                document.getElementById('adminSection').style.display = 'none';
-                isAdmin = false;
-                return;
-            }
+  const now = new Date();
+  const timeStr = now.toLocaleString('vi-VN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit', year:'numeric' });
+  localStorage.setItem('lastUpdate', timeStr);
 
-            // Mở admin - yêu cầu mật khẩu
-            const pwd = prompt('🔐 Nhập mật khẩu quản lý:');
-            if (pwd === ADMIN_PASSWORD) {
-                document.getElementById('adminSection').style.display = 'block';
-                renderForm();
-                isAdmin = true;
-                showToast('🔑 Đã mở bảng quản lý giá');
-            } else if (pwd !== null) {
-                alert('❌ Sai mật khẩu!');
-            }
-        }
+  renderProducts();
+  updateLastUpdate();
+  showToast('✅ Đã lưu giá ' + count + ' sản phẩm!');
+  renderForm();
+}
 
-        // ===== THÔNG BÁO =====
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+function updateLastUpdate() {
+  const lu = localStorage.getItem('lastUpdate');
+  document.getElementById('lastUpdate').textContent = lu ? '🕐 Cập nhật lúc: ' + lu : 'Chưa có cập nhật';
+}
 
-        // ===== CHẠY KHI LOAD TRANG =====
-        init();
-    </script>
+// ===== ADMIN MODE =====
+function toggleMode() {
+  if (isAdmin) {
+    document.getElementById('adminSection').style.display = 'none';
+    isAdmin = false;
+    return;
+  }
+  const pwd = prompt('🔐 Nhập mật khẩu quản lý:');
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('adminSection').style.display = 'block';
+    renderForm();
+    isAdmin = true;
+    showToast('🔑 Đã mở bảng quản lý giá');
+  } else if (pwd !== null) {
+    alert('❌ Sai mật khẩu!');
+  }
+}
 
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
 </body>
 </html>
