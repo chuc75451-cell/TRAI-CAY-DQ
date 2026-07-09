@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRÁI CÂY DQ</title>
+<meta name="monetag" content="22dfe706aa333a89efeac084a162ee77">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(135deg, #e8f4f8 0%, #f0f8ff 100%);
+  min-height: 100vh;
+}
+.header {
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+  color: white; padding: 20px 0; text-align: center;
+  box-shadow: 0 4px 20px rgba(13,110,253,0.3);
+  position: sticky; top: 0; z-index: 1000;
+}
+.header h1 { font-size: 2.5rem; letter-spacing: 3px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+.header p { font-size: 1rem; opacity: 0.9; margin-top: 5px; }
+.container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+/* ===== NAV BUTTONS ===== */
+.nav-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
+.nav-buttons button {
+  background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.4);
+  color: white; padding: 8px 18px; border-radius: 25px; cursor: pointer;
+  font-size: 0.9rem; transition: all 0.3s;
+}
+.nav-buttons button:hover { background: rgba(255,255,255,0.25); border-color: white; }
+.nav-buttons button.active { background: white; color: #0d6efd; border-color: white; font-weight: 600; }
+
+/* ===== ADMIN ===== */
+.update-section {
+  background: white; border-radius: 16px; padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08); margin-bottom: 30px;
+  border: 1px solid rgba(13,110,253,0.1);
+}
+.update-section h2 { color: #0d6efd; margin-bottom: 20px; font-size: 1.5rem; }
+.form-row {
+  display: flex; gap: 12px; margin-bottom: 12px;
+  align-items: center; flex-wrap: wrap; padding: 10px 12px;
+  border-radius: 10px; transition: all 0.3s;
+}
+.form-row.off { background: #f8f9fa; opacity: 0.7; }
+.form-row.off label { color: #999; }
+.form-row label { min-width: 170px; font-weight: 600; color: #333; font-size: 0.9rem; }
+.form-row input[type="number"] {
+  flex: 1; min-width: 100px; padding: 10px 14px;
+  border: 2px solid #e0e7ef; border-radius: 8px; font-size: 0.95rem;
+  transition: all 0.3s; outline: none;
+}
+.form-row input[type="number"]:focus { border-color: #0d6efd; box-shadow: 0 0 0 4px rgba(13,110,253,0.15); }
+.form-row .old-price { color: #dc3545; font-size: 0.8rem; text-decoration: line-through; min-width: 70px; }
+.form-row .toggle-btn {
+  width: 44px; height: 24px; border-radius: 12px; border: none;
+  cursor: pointer; position: relative; transition: all 0.3s; flex-shrink: 0;
+}
+.form-row .toggle-btn.on { background: #198754; }
+.form-row .toggle-btn.off { background: #dc3545; }
+.form-row .toggle-btn::after {
+  content: ''; position: absolute; top: 2px; width: 20px; height: 20px;
+  border-radius: 50%; background: white; transition: all 0.3s;
+}
+.form-row .toggle-btn.on::after { right: 2px; }
+.form-row .toggle-btn.off::after { left: 2px; }
+.form-row .note-input {
+  flex: 0 0 120px; min-width: 80px; padding: 8px 10px;
+  border: 2px solid #e0e7ef; border-radius: 8px; font-size: 0.85rem; outline: none;
+}
+.form-row .note-input:focus { border-color: #0d6efd; }
+.form-row .store-input {
+  flex: 1; min-width: 200px; padding: 10px 14px;
+  border: 2px solid #e0e7ef; border-radius: 8px; font-size: 0.95rem; outline: none;
+}
+.form-row .store-input:focus { border-color: #0d6efd; }
+
+.btn-save-all {
+  background: linear-gradient(135deg, #198754, #157347); color: white;
+  border: none; padding: 12px 30px; border-radius: 10px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  display: block; margin: 20px auto 0; min-width: 200px;
+}
+.btn-save-all:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(25,135,84,0.4); }
+.btn-update {
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7); color: white;
+  border: none; padding: 12px 30px; border-radius: 10px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  display: block; margin: 10px auto 0; min-width: 200px;
+}
+.btn-update:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(13,110,253,0.4); }
+.btn-danger {
+  background: linear-gradient(135deg, #dc3545, #bb2d3b); color: white;
+  border: none; padding: 12px 30px; border-radius: 10px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s;
+  display: block; margin: 10px auto 0; min-width: 200px;
+}
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(220,53,69,0.4); }
+
+/* ===== PRODUCTS ===== */
+.products-section {
+  background: white; border-radius: 16px; padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid rgba(13,110,253,0.1);
+  margin-bottom: 20px;
+}
+.products-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; flex-wrap: wrap; gap: 10px;
+}
+.products-section h2 { color: #0d6efd; font-size: 1.5rem; }
+.products-section .sub-title { color: #888; font-size: 0.9rem; margin-bottom: 15px; }
+.last-update { color: #888; font-size: 0.85rem; font-style: italic; }
+.products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px,1fr)); gap: 20px; }
+.product-card {
+  background: white; border: 2px solid #e8f0fe; border-radius: 14px;
+  padding: 20px; transition: all 0.3s; position: relative;
+}
+.product-card:hover { border-color: #0d6efd; box-shadow: 0 8px 25px rgba(13,110,253,0.1); transform: translateY(-3px); }
+.product-card.sold-out { background: #f8f9fa; border-color: #e9ecef; opacity: 0.75; }
+.product-card.sold-out:hover { transform: none; box-shadow: none; }
+.product-name { font-size: 1.1rem; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+.product-weight { color: #888; font-size: 0.85rem; margin-bottom: 8px; }
+.price-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.product-price { font-size: 1.6rem; font-weight: 800; color: #0d6efd; }
+.product-price .currency { font-size: 0.9rem; font-weight: 600; color: #0b5ed7; }
+.old-price-display { font-size: 1rem; color: #dc3545; text-decoration: line-through; }
+.product-status {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600; margin-top: 8px;
+}
+.product-status.in-stock { background: #d1e7ff; color: #0d6efd; }
+.product-status.out-of-stock { background: #f0f0f0; color: #999; }
+.product-note { font-size: 0.8rem; color: #856404; background: #fff3cd; padding: 3px 10px; border-radius: 12px; display: inline-block; margin-top: 6px; }
+.product-badge {
+  display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; margin-left: 6px; vertical-align: middle;
+}
+.badge-new { background: #198754; color: white; }
+.badge-old { background: #dc3545; color: white; }
+.badge-special { background: #ffc107; color: #333; }
+
+/* ===== BẢN ĐỒ ===== */
+.map-section { display: none; }
+.map-section.active { display: block; }
+.map-container {
+  background: white; border-radius: 16px; padding: 25px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid rgba(13,110,253,0.1);
+}
+.map-container h2 { color: #0d6efd; margin-bottom: 15px; font-size: 1.5rem; }
+.map-container p { color: #666; margin-bottom: 15px; line-height: 1.6; }
+.map-search-box {
+  display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.map-search-box input {
+  flex: 1; min-width: 200px; padding: 14px 18px;
+  border: 2px solid #e0e7ef; border-radius: 10px; font-size: 1rem; outline: none;
+}
+.map-search-box input:focus { border-color: #0d6efd; box-shadow: 0 0 0 4px rgba(13,110,253,0.15); }
+.map-search-box button {
+  background: #0d6efd; color: white; border: none;
+  padding: 14px 28px; border-radius: 10px; font-size: 1rem;
+  font-weight: 600; cursor: pointer; transition: all 0.3s; white-space: nowrap;
+}
+.map-search-box button:hover { background: #0b5ed7; transform: translateY(-2px); }
+#mapIframe {
+  width: 100%; height: 400px; border: none; border-radius: 12px; margin-bottom: 20px;
+}
+.distance-result {
+  background: #f0f8ff; border-radius: 12px; padding: 20px;
+  border: 1px solid #d1e7ff;
+}
+.distance-result h3 { color: #0d6efd; margin-bottom: 15px; font-size: 1.1rem; }
+.distance-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 15px;
+}
+.distance-card {
+  background: white; border-radius: 12px; padding: 16px;
+  text-align: center; border: 2px solid #e8f0fe;
+}
+.distance-card .icon { font-size: 2rem; margin-bottom: 8px; }
+.distance-card .label { color: #666; font-size: 0.9rem; margin-bottom: 5px; }
+.distance-card .value { font-size: 1.4rem; font-weight: 700; color: #1a1a2e; }
+.distance-card .value.highlight { color: #0d6efd; }
+.distance-card .sub { font-size: 0.8rem; color: #888; }
+.store-address-info {
+  background: #fff3cd; border-radius: 10px; padding: 15px;
+  margin-bottom: 20px; border-left: 4px solid #ffc107;
+}
+.store-address-info strong { color: #856404; }
+.store-address-info .addr { color: #333; margin-top: 5px; font-size: 1.1rem; }
+
+/* ===== THÔNG BÁO ===== */
+.toast {
+  position: fixed; bottom: 30px; right: 30px;
+  background: #198754; color: white; padding: 16px 28px;
+  border-radius: 12px; font-weight: 600;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  transform: translateY(100px); opacity: 0; transition: all 0.5s; z-index: 9999;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.error { background: #dc3545; }
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 1.8rem; }
+  .form-row { flex-direction: column; align-items: stretch; }
+  .form-row label { min-width: unset; }
+  .products-grid { grid-template-columns: 1fr; }
+  .map-search-box { flex-direction: column; }
+  .map-search-box button { width: 100%; }
+  #mapIframe { height: 300px; }
+}
+</style>
+</head>
+<body>
+
+<script src="https://s13.tmng.org/c.js?n=22dfe706aa333a89efeac084a162ee77" async></script>
+
+<div class="header">
+  <h1>🍍 TRÁI CÂY DQ 🍍</h1>
+  <p>Trái cây tươi ngon - Giá tốt mỗi ngày</p>
+  <div class="nav-buttons">
+    <button class="active" onclick="showSection('products')" id="navProducts">🛒 Sản phẩm</button>
+    <button onclick="showSection('map')" id="navMap">📍 Địa chỉ & Bản đồ</button>
+    <button onclick="toggleMode()">🔑 Quản lý</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ===== SẢN PHẨM ===== -->
+  <div id="sectionProducts">
+    <div class="products-section">
+      <div class="products-header">
+        <h2>🛒 Bảng giá hôm nay</h2>
+        <span class="last-update" id="lastUpdate">Chưa có cập nhật</span>
+      </div>
+      <div class="sub-title">✅ Còn hàng</div>
+      <div class="products-grid" id="productGridInStock"></div>
+    </div>
+    <div class="products-section" id="soldOutSection" style="display:none;">
+      <div class="products-header">
+        <h2>📋 Hết hàng / Tạm ngưng</h2>
+      </div>
+      <div class="products-grid" id="productGridSoldOut"></div>
+    </div>
+  </div>
+
+  <!-- ===== BẢN ĐỒ & ĐỊA CHỈ ===== -->
+  <div id="sectionMap" class="map-section">
+    <div class="map-container">
+      <h2>📍 Địa chỉ cửa hàng</h2>
+
+      <div class="store-address-info" id="storeAddressInfo">
+        <strong>🏪 TRÁI CÂY DQ</strong>
+        <div class="addr" id="storeAddressDisplay">V5PC+C4W, QL61, Châu Thành, An Giang, Việt Nam</div>
+      </div>
+
+      <p>Nhập địa chỉ của bạn bên dưới để xem khoảng cách và thời gian di chuyển đến cửa hàng:</p>
+
+      <div class="map-search-box">
+        <input type="text" id="userAddress" placeholder="Nhập địa chỉ của bạn (VD: 123 Nguyễn Huệ, Quận 1, TP.HCM)" onkeydown="if(event.key==='Enter') calculateDistance()">
+        <button onclick="calculateDistance()">🔍 Tính khoảng cách</button>
+      </div>
+
+      <iframe id="mapIframe" 
+        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=V5PC%2BC4W+QL61+Ch%C3%A2u+Th%C3%A0nh+An+Giang&center=10.4342,105.2581&zoom=15"
+        allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+
+      <div class="distance-result" id="distanceResult" style="display:none;">
+        <h3>📊 Kết quả từ <span id="fromAddr">bạn</span> → TRÁI CÂY DQ</h3>
+        <div class="distance-grid">
+          <div class="distance-card">
+            <div class="icon">📏</div>
+            <div class="label">Khoảng cách</div>
+            <div class="value highlight" id="distKm">0 km</div>
+          </div>
+          <div class="distance-card">
+            <div class="icon">🏍️</div>
+            <div class="label">Xe máy</div>
+            <div class="value" id="distMotor">0 phút</div>
+            <div class="sub">~ 40 km/h</div>
+          </div>
+          <div class="distance-card">
+            <div class="icon">🚗</div>
+            <div class="label">Xe hơi</div>
+            <div class="value" id="distCar">0 phút</div>
+            <div class="sub">~ 50 km/h</div>
+          </div>
+          <div class="distance-card">
+            <div class="icon">🚶</div>
+            <div class="label">Đi bộ</div>
+            <div class="value" id="distWalk">0 phút</div>
+            <div class="sub">~ 5 km/h</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ADMIN ===== -->
+  <div id="adminSection" class="update-section" style="display:none;">
+    <h2>✏️ Cập nhật cửa hàng & giá sản phẩm</h2>
+
+    <div style="background:#e8f4f8;border-radius:12px;padding:20px;margin-bottom:25px;border:1px solid #d1e7ff;">
+      <h3 style="color:#0d6efd;margin-bottom:12px;">🏪 Địa chỉ cửa hàng</h3>
+      <div class="form-row">
+        <label>📍 Địa chỉ (tên đường, quận, TP):</label>
+        <input type="text" id="storeAddressAdmin" class="store-input" placeholder="VD: V5PC+C4W, QL61, Châu Thành, An Giang">
+      </div>
+      <div class="form-row">
+        <label>🌐 Tọa độ Google Maps:</label>
+        <input type="text" id="storeCoordsAdmin" class="store-input" placeholder="VD: 10.4342,105.2581">
+        <span style="color:#888;font-size:0.8rem;">Lấy tọa độ từ Google Maps</span>
+      </div>
+    </div>
+
+    <h3 style="color:#0d6efd;margin-bottom:15px;">🍑 Giá sản phẩm</h3>
+    <p style="color:#666;margin-bottom:20px;">
+      🔘 XANH = còn hàng, ĐỎ = hết hàng<br>
+      💰 Giá cũ: nhập để hiển thị giá gạch ngang<br>
+      📋 Ghi chú: "Đặt trước 1 ngày", "Có sẵn",...
+    </p>
+    <div id="priceForm"></div>
+    <button class="btn-save-all" onclick="saveAll()">💾 Lưu tất cả</button>
+    <button class="btn-update" onclick="showSection('products');toggleMode();">🔒 Đóng quản lý</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+// DANH SÁCH SẢN PHẨM - ĐÃ TÁCH MỚI & CŨ
+// =============================================
+const PRODUCTS = [
+  // --- Trái cây thường ---
+  { id: 'mangcut',        name: 'Măng cụt',                weight: '1kg',  badge: '' },
+  { id: 'xoai_dl',        name: 'Xoài Đài Loan',           weight: '1kg',  badge: '' },
+  { id: 'xoai_cocdeo',    name: 'Xoài Cốc Đeo',            weight: '1kg',  badge: '' },
+  { id: 'xoai_catchu',    name: 'Xoài Cát Chu',            weight: '1kg',  badge: '' },
+  { id: 'mangcau',        name: 'Mãng cầu',                weight: '1kg',  badge: '' },
+  { id: 'cucai',          name: 'Củ cải',                  weight: '10kg', badge: '' },
+  { id: 'tao',            name: 'Táo',                     weight: '1kg',  badge: '' },
+  { id: 'le',             name: 'Lê',                      weight: '1kg',  badge: '' },
+  { id: 'nhan',           name: 'Nhãn',                    weight: '1kg',  badge: '' },
+  { id: 'dao',            name: 'Đào',                     weight: '1kg',  badge: '' },
+  { id: 'nho',            name: 'Nho',                     weight: '1kg',  badge: '' },
+
+  // --- Quýt Úc ---
+  { id: 'quytuc_m',       name: 'Quýt Úc',                weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
+  { id: 'quytuc_c',       name: 'Quýt Úc',                weight: '1kg',  badge: 'old',  badgeText: 'CŨ' },
+
+  // --- Chôm chôm Thái ---
+  { id: 'chomchomthai_m', name: 'Chôm chôm Thái',          weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
+  { id: 'chomchomthai_c', name: 'Chôm chôm Thái',          weight: '1kg',  badge: 'old',  badgeText: 'CŨ' },
+
+  // --- Chôm chôm Vĩnh Long ---
+  { id: 'chomchomvl_m',   name: 'Chôm chôm Vĩnh Long',     weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
+  { id: 'chomchomvl_c',   name: 'Chôm chôm Vĩnh Long',     weight: '1kg',  badge: 'old',  badgeText: 'CŨ' }
+];
+
+const ADMIN_PASSWORD = 'chomsky1978';
+const DEFAULT_STORE = 'V5PC+C4W, QL61, Châu Thành, An Giang, Việt Nam';
+const DEFAULT_COORDS = '10.4342,105.2581';
+let isAdmin = false;
+
+// =============================================
+// KHỞI TẠO
+// =============================================
+function init() {
+  // Set địa chỉ mặc định nếu chưa có
+  if (!localStorage.getItem('store_address')) {
+    localStorage.setItem('store_address', DEFAULT_STORE);
+    localStorage.setItem('store_coords', DEFAULT_COORDS);
+  }
+  loadStoreInfo();
+  renderProducts();
+  renderForm();
+  updateLastUpdate();
+  showSection('products');
+}
+
+// =============================================
+// CHUYỂN TAB
+// =============================================
+function showSection(section) {
+  document.getElementById('sectionProducts').style.display = section === 'products' ? 'block' : 'none';
+  document.getElementById('sectionMap').style.display = section === 'map' ? 'block' : 'none';
+  document.getElementById('navProducts').className = section === 'products' ? 'active' : '';
+  document.getElementById('navMap').className = section === 'map' ? 'active' : '';
+}
+
+// =============================================
+// LƯU & LOAD THÔNG TIN CỬA HÀNG
+// =============================================
+function loadStoreInfo() {
+  const address = localStorage.getItem('store_address') || DEFAULT_STORE;
+  const coords  = localStorage.getItem('store_coords')  || DEFAULT_COORDS;
+  document.getElementById('storeAddressDisplay').textContent = address;
+  document.getElementById('storeAddressAdmin').value = address;
+  document.getElementById('storeCoordsAdmin').value = coords;
+  updateMap(coords, address);
+}
+
+function updateMap(coords, address) {
+  const iframe = document.getElementById('mapIframe');
+  const [lat, lng] = coords.split(',').map(c => c.trim());
+  const encodedAddr = encodeURIComponent(address);
+  iframe.src = `https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodedAddr}&center=${lat},${lng}&zoom=15`;
+}
+
+// =============================================
+// TÍNH KHOẢNG CÁCH
+// =============================================
+function calculateDistance() {
+  const userAddr = document.getElementById('userAddress').value.trim();
+  if (!userAddr) {
+    showToast('⚠️ Vui lòng nhập địa chỉ của bạn!', true);
+    return;
+  }
+
+  const storeCoords = localStorage.getItem('store_coords') || DEFAULT_COORDS;
+  const [slat, slng] = storeCoords.split(',').map(c => parseFloat(c.trim()));
+
+  showToast('🔄 Đang tính khoảng cách...');
+
+  const geocoder = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(userAddr)}&limit=1`;
+  
+  fetch(geocoder)
+    .then(r => r.json())
+    .then(data => {
+      if (!data || data.length === 0) {
+        showToast('⚠️ Không tìm thấy địa chỉ của bạn! Thử nhập chi tiết hơn.', true);
+        return;
+      }
+
+      const ulat = parseFloat(data[0].lat);
+      const ulng = parseFloat(data[0].lon);
+      const dist = haversineDistance(slat, slng, ulat, ulng);
+      const distKm = dist.toFixed(1);
+
+      const motorMin = Math.round((dist / 40) * 60);
+      const carMin   = Math.round((dist / 50) * 60);
+      const walkMin  = Math.round((dist / 5) * 60);
+
+      document.getElementById('fromAddr').textContent = data[0].display_name.split(',')[0];
+      document.getElementById('distKm').textContent = distKm + ' km';
+      document.getElementById('distMotor').textContent = motorMin + ' phút';
+      document.getElementById('distCar').textContent = carMin + ' phút';
+      document.getElementById('distWalk').textContent = walkMin + ' phút';
+      document.getElementById('distanceResult').style.display = 'block';
+
+      const iframe = document.getElementById('mapIframe');
+      iframe.src = `https://www.google.com/maps/embed/v1/directions?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&origin=${ulat},${ulng}&destination=${slat},${slng}&mode=driving`;
+
+      showToast('✅ Tính khoảng cách thành công!');
+    })
+    .catch(err => {
+      showToast('⚠️ Có lỗi xảy ra, vui lòng thử lại!', true);
+      console.error(err);
+    });
+}
+
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// =============================================
+// HIỂN THỊ SẢN PHẨM (có badge MỚI / CŨ)
+// =============================================
+function renderProducts() {
+  const gridIn = document.getElementById('productGridInStock');
+  const gridOut = document.getElementById('productGridSoldOut');
+  let htmlIn = '';
+  let htmlOut = '';
+  let hasOut = false;
+
+  PRODUCTS.forEach(p => {
+    const active  = localStorage.getItem('active_' + p.id);
+    const isOn    = active === null ? true : active === 'true';
+    const price   = localStorage.getItem('price_' + p.id) || '0';
+    const oldPrice = localStorage.getItem('oldprice_' + p.id) || '';
+    const note    = localStorage.getItem('note_' + p.id) || '';
+
+    const priceDisplay = price === '0' ? 'Liên hệ' : parseInt(price).toLocaleString('vi-VN') + ' <span class="currency">₫</span>';
+    const oldDisplay = (oldPrice && parseInt(oldPrice) > 0) ? parseInt(oldPrice).toLocaleString('vi-VN') + '₫' : '';
+    const noteDisplay = note ? `<div class="product-note">📌 ${note}</div>` : '';
+    const badgeDisplay = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badgeText}</span>` : '';
+
+    let card = `
+      <div class="product-card ${isOn ? '' : 'sold-out'}">
+        <div class="product-name">🍑 ${p.name} ${badgeDisplay}</div>
+        <div class="product-weight">📦 ${p.weight}</div>
+        <div class="price-row">
+          <div class="product-price">${priceDisplay}</div>
+          ${oldDisplay ? `<div class="old-price-display">${oldDisplay}</div>` : ''}
+        </div>
+        <div class="product-status ${isOn ? 'in-stock' : 'out-of-stock'}">${isOn ? '✅ Còn hàng' : '⛔ Hết hàng'}</div>
+        ${noteDisplay}
+      </div>`;
+
+    if (isOn) { htmlIn += card; }
+    else { htmlOut += card; hasOut = true; }
+  });
+
+  gridIn.innerHTML = htmlIn || '<p style="color:#888;">Chưa có sản phẩm nào đang bán.</p>';
+  gridOut.innerHTML = htmlOut;
+  document.getElementById('soldOutSection').style.display = hasOut ? 'block' : 'none';
+}
+
+// =============================================
+// FORM ADMIN (có badge MỚI / CŨ)
+// =============================================
+function renderForm() {
+  const form = document.getElementById('priceForm');
+  let html = '';
+  PRODUCTS.forEach(p => {
+    const active   = localStorage.getItem('active_' + p.id);
+    const isOn     = active === null ? true : active === 'true';
+    const price    = localStorage.getItem('price_' + p.id) || '';
+    const oldPrice = localStorage.getItem('oldprice_' + p.id) || '';
+    const note     = localStorage.getItem('note_' + p.id) || '';
+    const badgeDisplay = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badgeText}</span>` : '';
+
+    html += `
+      <div class="form-row ${isOn ? '' : 'off'}" id="row_${p.id}">
+        <button class="toggle-btn ${isOn ? 'on' : 'off'}" id="tog_${p.id}" onclick="toggleProduct('${p.id}')"></button>
+        <label>🍑 ${p.name} ${badgeDisplay} (${p.weight})</label>
+        <input type="number" id="input_${p.id}" placeholder="Giá mới" value="${price}" min="0">
+        <span style="color:#888;font-size:0.85rem;">₫</span>
+        <input type="number" id="oldinput_${p.id}" placeholder="Giá cũ" value="${oldPrice}" min="0" style="max-width:100px;">
+        <span style="color:#dc3545;font-size:0.75rem;">cũ</span>
+        <input type="text" id="note_${p.id}" placeholder="Ghi chú" value="${note}" class="note-input">
+      </div>`;
+  });
+  form.innerHTML = html;
+}
+
+// =============================================
+// BẬT/TẮT SẢN PHẨM
+// =============================================
+function toggleProduct(id) {
+  const current = localStorage.getItem('active_' + id);
+  const isOn = current === null ? true : current === 'true';
+  localStorage.setItem('active_' + id, (!isOn).toString());
+  renderForm();
+}
+
+// =============================================
+// LƯU TẤT CẢ
+// =============================================
+function saveAll() {
+  const storeAddr = document.getElementById('storeAddressAdmin').value.trim();
+  const storeCoords = document.getElementById('storeCoordsAdmin').value.trim();
+  if (storeAddr) localStorage.setItem('store_address', storeAddr);
+  if (storeCoords) localStorage.setItem('store_coords', storeCoords);
+  loadStoreInfo();
+
+  let count = 0;
+  PRODUCTS.forEach(p => {
+    const price    = document.getElementById('input_' + p.id).value.trim() || '0';
+    const oldPrice = document.getElementById('oldinput_' + p.id).value.trim() || '';
+    const note     = document.getElementById('note_' + p.id).value.trim() || '';
+    localStorage.setItem('price_' + p.id, price);
+    localStorage.setItem('oldprice_' + p.id, oldPrice);
+    localStorage.setItem('note_' + p.id, note);
+    count++;
+  });
+
+  const now = new Date();
+  const timeStr = now.toLocaleString('vi-VN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit', year:'numeric' });
+  localStorage.setItem('lastUpdate', timeStr);
+
+  renderProducts();
+  updateLastUpdate();
+  renderForm();
+  showToast('✅ Đã lưu địa chỉ & giá ' + count + ' sản phẩm!');
+}
+
+function updateLastUpdate() {
+  const lu = localStorage.getItem('lastUpdate');
+  document.getElementById('lastUpdate').textContent = lu ? '🕐 Cập nhật lúc: ' + lu : 'Chưa có cập nhật';
+}
+
+// =============================================
+// ADMIN MODE
+// =============================================
+function toggleMode() {
+  if (isAdmin) {
+    document.getElementById('adminSection').style.display = 'none';
+    isAdmin = false;
+    return;
+  }
+  const pwd = prompt('🔐 Nhập mật khẩu quản lý:');
+  if (pwd === ADMIN_PASSWORD) {
+    document.getElementById('adminSection').style.display = 'block';
+    document.getElementById('storeAddressAdmin').value = localStorage.getItem('store_address') || DEFAULT_STORE;
+    document.getElementById('storeCoordsAdmin').value = localStorage.getItem('store_coords') || DEFAULT_COORDS;
+    renderForm();
+    isAdmin = true;
+    showToast('🔑 Đã mở bảng quản lý');
+  } else if (pwd !== null) {
+    alert('❌ Sai mật khẩu!');
+  }
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
