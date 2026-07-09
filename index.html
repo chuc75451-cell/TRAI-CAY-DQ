@@ -132,7 +132,7 @@ body {
 .badge-new { background: #198754; color: white; }
 .badge-old { background: #dc3545; color: white; }
 
-/* ===== ĐỊA CHỈ ĐƠN GIẢN ===== */
+/* ===== ĐỊA CHỈ ===== */
 .address-section {
   background: white; border-radius: 16px; padding: 25px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.08); border: 1px solid rgba(13,110,253,0.1);
@@ -206,7 +206,7 @@ body {
     </div>
   </div>
 
-  <!-- ===== ĐỊA CHỈ ĐƠN GIẢN ===== -->
+  <!-- ===== ĐỊA CHỈ ===== -->
   <div id="sectionAddress" class="address-section">
     <h2>📍 Địa chỉ cửa hàng</h2>
     <div class="address-box">
@@ -214,11 +214,11 @@ body {
       <div class="info-box">
         <div class="store-name">🍍 TRÁI CÂY DQ</div>
         <div class="store-addr" id="addressDisplay">V5PC+C4W, QL61, Châu Thành, An Giang, Việt Nam</div>
-        <div class="store-phone">📞 Liên hệ: <span id="phoneDisplay">(Chưa cập nhật)</span></div>
+        <div class="store-phone">📞 <a href="tel:0943913367" style="color:#0d6efd;text-decoration:none;" id="phoneDisplay">0943 913 367</a></div>
       </div>
     </div>
     <p style="color:#888;margin-top:15px;text-align:center;">
-      👆 Bấm vào địa chỉ bên trên để copy và dẫn đường bằng Google Maps
+      👆 Bấm vào số điện thoại để gọi trực tiếp
     </p>
   </div>
 
@@ -234,7 +234,7 @@ body {
       </div>
       <div class="form-row">
         <label>📞 Số điện thoại:</label>
-        <input type="text" id="storePhoneAdmin" class="store-input" placeholder="VD: 0909 xxx xxx">
+        <input type="text" id="storePhoneAdmin" class="store-input" placeholder="VD: 0943913367">
       </div>
     </div>
 
@@ -258,7 +258,6 @@ body {
 // DANH SÁCH SẢN PHẨM
 // =============================================
 const PRODUCTS = [
-  // --- Trái cây thường ---
   { id: 'mangcut',        name: 'Măng cụt',                weight: '1kg',  badge: '' },
   { id: 'xoai_dl',        name: 'Xoài Đài Loan',           weight: '1kg',  badge: '' },
   { id: 'xoai_cocdeo',    name: 'Xoài Cốc Đeo',            weight: '1kg',  badge: '' },
@@ -270,31 +269,22 @@ const PRODUCTS = [
   { id: 'nhan',           name: 'Nhãn',                    weight: '1kg',  badge: '' },
   { id: 'dao',            name: 'Đào',                     weight: '1kg',  badge: '' },
   { id: 'nho',            name: 'Nho',                     weight: '1kg',  badge: '' },
-
-  // --- Quýt Úc ---
   { id: 'quytuc_m',       name: 'Quýt Úc',                weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
   { id: 'quytuc_c',       name: 'Quýt Úc',                weight: '1kg',  badge: 'old',  badgeText: 'CŨ' },
-
-  // --- Chôm chôm Thái ---
   { id: 'chomchomthai_m', name: 'Chôm chôm Thái',          weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
   { id: 'chomchomthai_c', name: 'Chôm chôm Thái',          weight: '1kg',  badge: 'old',  badgeText: 'CŨ' },
-
-  // --- Chôm chôm Vĩnh Long ---
   { id: 'chomchomvl_m',   name: 'Chôm chôm Vĩnh Long',     weight: '1kg',  badge: 'new',  badgeText: 'MỚI' },
   { id: 'chomchomvl_c',   name: 'Chôm chôm Vĩnh Long',     weight: '1kg',  badge: 'old',  badgeText: 'CŨ' }
 ];
 
 const ADMIN_PASSWORD = 'chomsky1978';
 const DEFAULT_STORE = 'V5PC+C4W, QL61, Châu Thành, An Giang, Việt Nam';
+const DEFAULT_PHONE = '0943913367';
 let isAdmin = false;
 
-// =============================================
-// KHỞI TẠO
-// =============================================
 function init() {
-  if (!localStorage.getItem('store_address')) {
-    localStorage.setItem('store_address', DEFAULT_STORE);
-  }
+  if (!localStorage.getItem('store_address')) localStorage.setItem('store_address', DEFAULT_STORE);
+  if (!localStorage.getItem('store_phone')) localStorage.setItem('store_phone', DEFAULT_PHONE);
   loadStoreInfo();
   renderProducts();
   renderForm();
@@ -302,9 +292,6 @@ function init() {
   showSection('products');
 }
 
-// =============================================
-// CHUYỂN TAB
-// =============================================
 function showSection(section) {
   document.getElementById('sectionProducts').style.display = section === 'products' ? 'block' : 'none';
   document.getElementById('sectionAddress').style.display = section === 'address' ? 'block' : 'none';
@@ -313,27 +300,21 @@ function showSection(section) {
   document.getElementById('navAddress').className = section === 'address' ? 'active' : '';
 }
 
-// =============================================
-// LOAD THÔNG TIN CỬA HÀNG
-// =============================================
 function loadStoreInfo() {
   const address = localStorage.getItem('store_address') || DEFAULT_STORE;
-  const phone = localStorage.getItem('store_phone') || 'Chưa cập nhật';
+  const phone = localStorage.getItem('store_phone') || DEFAULT_PHONE;
   document.getElementById('addressDisplay').textContent = address;
-  document.getElementById('phoneDisplay').textContent = phone;
+  const phoneLink = document.getElementById('phoneDisplay');
+  phoneLink.textContent = phone.replace(/(\d{4})(\d{3})(\d{3})/, '$1 $2 $3');
+  phoneLink.href = 'tel:' + phone;
   document.getElementById('storeAddressAdmin').value = address;
   document.getElementById('storePhoneAdmin').value = phone;
 }
 
-// =============================================
-// HIỂN THỊ SẢN PHẨM
-// =============================================
 function renderProducts() {
   const gridIn = document.getElementById('productGridInStock');
   const gridOut = document.getElementById('productGridSoldOut');
-  let htmlIn = '';
-  let htmlOut = '';
-  let hasOut = false;
+  let htmlIn = '', htmlOut = '', hasOut = false;
 
   PRODUCTS.forEach(p => {
     const active  = localStorage.getItem('active_' + p.id);
@@ -341,26 +322,12 @@ function renderProducts() {
     const price   = localStorage.getItem('price_' + p.id) || '0';
     const oldPrice = localStorage.getItem('oldprice_' + p.id) || '';
     const note    = localStorage.getItem('note_' + p.id) || '';
-
     const priceDisplay = price === '0' ? 'Liên hệ' : parseInt(price).toLocaleString('vi-VN') + ' <span class="currency">₫</span>';
     const oldDisplay = (oldPrice && parseInt(oldPrice) > 0) ? parseInt(oldPrice).toLocaleString('vi-VN') + '₫' : '';
     const noteDisplay = note ? `<div class="product-note">📌 ${note}</div>` : '';
     const badgeDisplay = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badgeText}</span>` : '';
-
-    let card = `
-      <div class="product-card ${isOn ? '' : 'sold-out'}">
-        <div class="product-name">🍑 ${p.name} ${badgeDisplay}</div>
-        <div class="product-weight">📦 ${p.weight}</div>
-        <div class="price-row">
-          <div class="product-price">${priceDisplay}</div>
-          ${oldDisplay ? `<div class="old-price-display">${oldDisplay}</div>` : ''}
-        </div>
-        <div class="product-status ${isOn ? 'in-stock' : 'out-of-stock'}">${isOn ? '✅ Còn hàng' : '⛔ Hết hàng'}</div>
-        ${noteDisplay}
-      </div>`;
-
-    if (isOn) { htmlIn += card; }
-    else { htmlOut += card; hasOut = true; }
+    const card = `<div class="product-card ${isOn ? '' : 'sold-out'}"><div class="product-name">🍑 ${p.name} ${badgeDisplay}</div><div class="product-weight">📦 ${p.weight}</div><div class="price-row"><div class="product-price">${priceDisplay}</div>${oldDisplay ? `<div class="old-price-display">${oldDisplay}</div>` : ''}</div><div class="product-status ${isOn ? 'in-stock' : 'out-of-stock'}">${isOn ? '✅ Còn hàng' : '⛔ Hết hàng'}</div>${noteDisplay}</div>`;
+    if (isOn) htmlIn += card; else { htmlOut += card; hasOut = true; }
   });
 
   gridIn.innerHTML = htmlIn || '<p style="color:#888;">Chưa có sản phẩm nào đang bán.</p>';
@@ -368,9 +335,6 @@ function renderProducts() {
   document.getElementById('soldOutSection').style.display = hasOut ? 'block' : 'none';
 }
 
-// =============================================
-// FORM ADMIN
-// =============================================
 function renderForm() {
   const form = document.getElementById('priceForm');
   let html = '';
@@ -381,24 +345,11 @@ function renderForm() {
     const oldPrice = localStorage.getItem('oldprice_' + p.id) || '';
     const note     = localStorage.getItem('note_' + p.id) || '';
     const badgeDisplay = p.badge ? `<span class="product-badge badge-${p.badge}">${p.badgeText}</span>` : '';
-
-    html += `
-      <div class="form-row ${isOn ? '' : 'off'}" id="row_${p.id}">
-        <button class="toggle-btn ${isOn ? 'on' : 'off'}" id="tog_${p.id}" onclick="toggleProduct('${p.id}')"></button>
-        <label>🍑 ${p.name} ${badgeDisplay} (${p.weight})</label>
-        <input type="number" id="input_${p.id}" placeholder="Giá mới" value="${price}" min="0">
-        <span style="color:#888;font-size:0.85rem;">₫</span>
-        <input type="number" id="oldinput_${p.id}" placeholder="Giá cũ" value="${oldPrice}" min="0" style="max-width:100px;">
-        <span style="color:#dc3545;font-size:0.75rem;">cũ</span>
-        <input type="text" id="note_${p.id}" placeholder="Ghi chú" value="${note}" class="note-input">
-      </div>`;
+    html += `<div class="form-row ${isOn ? '' : 'off'}" id="row_${p.id}"><button class="toggle-btn ${isOn ? 'on' : 'off'}" id="tog_${p.id}" onclick="toggleProduct('${p.id}')"></button><label>🍑 ${p.name} ${badgeDisplay} (${p.weight})</label><input type="number" id="input_${p.id}" placeholder="Giá mới" value="${price}" min="0"><span style="color:#888;font-size:0.85rem;">₫</span><input type="number" id="oldinput_${p.id}" placeholder="Giá cũ" value="${oldPrice}" min="0" style="max-width:100px;"><span style="color:#dc3545;font-size:0.75rem;">cũ</span><input type="text" id="note_${p.id}" placeholder="Ghi chú" value="${note}" class="note-input"></div>`;
   });
   form.innerHTML = html;
 }
 
-// =============================================
-// BẬT/TẮT SẢN PHẨM
-// =============================================
 function toggleProduct(id) {
   const current = localStorage.getItem('active_' + id);
   const isOn = current === null ? true : current === 'true';
@@ -406,31 +357,25 @@ function toggleProduct(id) {
   renderForm();
 }
 
-// =============================================
-// LƯU TẤT CẢ
-// =============================================
 function saveAll() {
   const storeAddr = document.getElementById('storeAddressAdmin').value.trim();
   const storePhone = document.getElementById('storePhoneAdmin').value.trim();
   if (storeAddr) localStorage.setItem('store_address', storeAddr);
   if (storePhone) localStorage.setItem('store_phone', storePhone);
   loadStoreInfo();
-
   let count = 0;
   PRODUCTS.forEach(p => {
-    const price    = document.getElementById('input_' + p.id).value.trim() || '0';
+    const price = document.getElementById('input_' + p.id).value.trim() || '0';
     const oldPrice = document.getElementById('oldinput_' + p.id).value.trim() || '';
-    const note     = document.getElementById('note_' + p.id).value.trim() || '';
+    const note = document.getElementById('note_' + p.id).value.trim() || '';
     localStorage.setItem('price_' + p.id, price);
     localStorage.setItem('oldprice_' + p.id, oldPrice);
     localStorage.setItem('note_' + p.id, note);
     count++;
   });
-
   const now = new Date();
   const timeStr = now.toLocaleString('vi-VN', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit', year:'numeric' });
   localStorage.setItem('lastUpdate', timeStr);
-
   renderProducts();
   updateLastUpdate();
   renderForm();
@@ -442,34 +387,23 @@ function updateLastUpdate() {
   document.getElementById('lastUpdate').textContent = lu ? '🕐 Cập nhật lúc: ' + lu : 'Chưa có cập nhật';
 }
 
-// =============================================
-// ADMIN MODE
-// =============================================
 function toggleMode() {
-  if (isAdmin) {
-    document.getElementById('adminSection').style.display = 'none';
-    isAdmin = false;
-    return;
-  }
+  if (isAdmin) { document.getElementById('adminSection').style.display = 'none'; isAdmin = false; return; }
   const pwd = prompt('🔐 Nhập mật khẩu quản lý:');
   if (pwd === ADMIN_PASSWORD) {
     document.getElementById('adminSection').style.display = 'block';
     document.getElementById('storeAddressAdmin').value = localStorage.getItem('store_address') || DEFAULT_STORE;
-    document.getElementById('storePhoneAdmin').value = localStorage.getItem('store_phone') || '';
+    document.getElementById('storePhoneAdmin').value = localStorage.getItem('store_phone') || DEFAULT_PHONE;
     renderForm();
     isAdmin = true;
     showToast('🔑 Đã mở bảng quản lý');
-  } else if (pwd !== null) {
-    alert('❌ Sai mật khẩu!');
-  }
+  } else if (pwd !== null) alert('❌ Sai mật khẩu!');
 }
 
 function showToast(msg, isError) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast' + (isError ? ' error' : '');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
+  t.textContent = msg; t.className = 'toast' + (isError ? ' error' : '');
+  t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 init();
